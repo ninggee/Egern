@@ -1,0 +1,95 @@
+# FanQie 番茄 - Egern 直接粘贴版
+# 用法: Egern -> 配置 -> 编辑 Profile.yaml, 粘到 rules: 下面最前面, 在所有 DIRECT 规则之前
+# 已把 Surge 的 REJECT-DROP 全部改成 Egern 的 REJECT, 效果一样都是拦掉
+# 原 Surge 里的 AND/OR 已转成 Egern YAML 的 and/or 嵌套写法
+rules:
+  - domain:
+      match: i-lq.snssdk.com
+      policy: REJECT
+  - domain:
+      match: security-lq.snssdk.com
+      policy: REJECT
+  - domain:
+      match: tnc3-alisc1.snssdk.com
+      policy: REJECT
+  - domain:
+      match: tnc3-aliec2.snssdk.com
+      policy: REJECT
+  - domain:
+      match: vas-lf-x.snssdk.com
+      policy: REJECT
+  - domain:
+      match: sf3-ttcdn-tos.pstatp.com
+      policy: REJECT
+  - domain_suffix:
+      match: byteorge.com
+      policy: REJECT
+  - domain_suffix:
+      match: bytegoofy.com
+      policy: REJECT
+  - domain_suffix:
+      match: ecombdapi.com
+      policy: REJECT
+  - domain_suffix:
+      match: ecombdimg.com
+      policy: REJECT
+  - domain:
+      match: gurd.snssdk.com
+      policy: REJECT
+  - domain_suffix:
+      match: ugsdk.cn
+      policy: REJECT
+  - domain_suffix:
+      match: bdurl.net
+      policy: REJECT
+  - domain_suffix:
+      match: zjurl.cn
+      policy: REJECT
+  - domain_suffix:
+      match: byteurl.cn
+      policy: REJECT
+  - and:
+      match:
+        - or:
+            match:
+              - domain_suffix:
+                  match: fqnovel.com
+              - domain_suffix:
+                  match: snssdk.com
+        - domain_keyword:
+            match: "-reward-"
+      policy: REJECT
+  - domain_wildcard:
+      match: "log*-applog*.fqnovel.com"
+      policy: REJECT
+  - domain_wildcard:
+      match: "rtlog*-applog*.fqnovel.com"
+      policy: REJECT
+  - domain_wildcard:
+      match: "mon*-misc*.fqnovel.com"
+      policy: REJECT
+  - and:
+      match:
+        - domain_suffix:
+            match: bytegecko.com
+        - domain_keyword:
+            match: "-tos"
+      policy: REJECT
+  - and:
+      match:
+        - or:
+            match:
+              - domain_keyword:
+                  match: "-bjlgy"
+              - domain_keyword:
+                  match: frontier-aweme
+        - domain_suffix:
+            match: snssdk.com
+      policy: REJECT
+  - and:
+      match:
+        - domain_suffix:
+            match: douyin.com
+        - domain_keyword:
+            match: "-open-lf"
+      policy: REJECT
