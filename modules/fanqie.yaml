@@ -1,3 +1,7 @@
+name: FanQie 番茄小说去广告
+description: 拦截番茄小说开屏/信息流/激励广告、穿山甲 SDK、日志与埋点上报, 只拦日志/监控/短链/激励广告, 保留番茄主 API、封面与短剧; -reward- 已限定在 fqnovel.com / snssdk.com 内, 避免误杀其他 App 的奖励功能; 共 22 条规则, 来源为 Surge 实测验证规则 (2026-11-12)
+icon: book.fill
+
 # FanQie 番茄 - Egern 直接粘贴版
 # 用法: Egern -> 配置 -> 编辑 Profile.yaml, 粘到 rules: 下面最前面, 在所有 DIRECT 规则之前
 # 已把 Surge 的 REJECT-DROP 全部改成 Egern 的 REJECT, 效果一样都是拦掉
