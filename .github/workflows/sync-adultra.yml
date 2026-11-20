@@ -1,0 +1,57 @@
+name: Sync AdUltra
+
+on:
+  schedule:
+    # 21:23 UTC = next day 05:23 Asia/Shanghai (UTC+8).
+    - cron: '23 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-adultra
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  GIT_TERMINAL_PROMPT: '0'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Test the single-dependency replacement and failure protections
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Fetch upstream and reapply the Qidian URL replacement
+        run: python3 tools/sync_adultra.py
+
+      - name: Commit only when the module changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          module='modules/adultra-qidian-fix.sgmodule'
+          if git diff --quiet -- "$module"; then
+            echo 'No change; no commit needed.'
+            echo 'Upstream checked successfully; the module is already current.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$module"
+          git commit -m 'chore: sync AdUltra upstream'
+          git push origin HEAD:main
+          echo 'Updated AdUltra; only the app2smile Qidian dependency URL is replaced.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain a failed sync
+        if: failure()
+        run: |
+          echo 'Sync did not complete. Check the failed step; no unvalidated upstream response is published.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'HTTP errors, missing/duplicate target URLs, or changed module structure require a retry or manual review.' >> "$GITHUB_STEP_SUMMARY"
