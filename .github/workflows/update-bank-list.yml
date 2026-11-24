@@ -1,0 +1,57 @@
+name: Update bank list
+
+on:
+  schedule:
+    # 16:00 UTC = next day 00:00 Asia/Shanghai (UTC+8).
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-bank-list
+  cancel-in-progress: false
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  GIT_TERMINAL_PROMPT: '0'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Rebuild the bank list from upstream
+        run: python3 tools/update_bank_list.py
+
+      - name: Commit only when the list changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          list='rules/bank_direct_all.list'
+          if git diff --quiet -- "$list"; then
+            echo 'No change; no commit needed.'
+            echo 'Upstream checked successfully; the bank list is already current.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$list"
+          git commit -m 'chore: update bank rules from upstream'
+          git push origin HEAD:main
+          echo 'Updated the bank list from upstream.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain a failed update
+        if: failure()
+        run: |
+          echo 'Update did not complete. Check the failed step; no unvalidated upstream response is published.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'HTTP errors, empty upstream files, missing required domains, or an implausible total require a retry or manual review.' >> "$GITHUB_STEP_SUMMARY"
