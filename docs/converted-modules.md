@@ -1,0 +1,9 @@
+# Converted modules
+
+`tools/module_sources.json` is the editable source list. It contains only reviewed public HTTPS module URLs. Add an entry with a unique lowercase `id`, its public `.sgmodule`, `.module`, or `.conf` URL, and a display `name`; remove an entry to stop syncing and prune its generated file on the next run. New hosts also need review and inclusion in the converter's host allowlist. The workflow runs daily at 06:23 Asia/Shanghai, after changes to the source list, or manually from GitHub Actions.
+
+The workflow publishes a source only when the pinned Egern-hub converter reports no warnings, requires no remote echo or script inspection, and produces parseable YAML without credential-like URLs. Standard redirect and reject responses are normalized to Egern's documented `url_rewrites` format; custom response bodies and unsupported rule policies are left on their original sources. A failed or newly unsupported source keeps its last published file and appears in the run summary by ID. Current inputs are the 26 sources that passed these checks on November 25, 2026. Some source URLs were extracted from Script Hub wrappers; the workflow fetches their public upstream directly instead of contacting the local Script Hub endpoint.
+
+The converter is fetched from its pinned upstream commit and verified by SHA-256; its source is not copied into this repository. Argument defaults remain in `compat_arguments`, while converter-only argument schema fields are retained as the documented argument description. The generated modules are syntax-checked, but referenced JavaScript still needs to be compatible with the Egern script runtime.
+
+Generated files under `modules/converted/` are managed by the workflow. To use one, point the matching module entry in your local Egern profile to `https://raw.githubusercontent.com/ninggee/Egern/main/modules/converted/<id>.yaml`. Keep the profile itself, including subscription links, outside this repository.

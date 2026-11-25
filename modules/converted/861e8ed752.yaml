@@ -1,0 +1,16 @@
+#!category=应用增强
+name: B站解锁高画质
+description: B站解锁高画质
+dns: {}
+scriptings:
+  - http_response:
+      name: 画质解锁
+      match: '^https:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\?'
+      script_url: 'https://raw.githubusercontent.com/LinkPass888/Surge/refs/heads/main/js/B站画质解锁.js'
+      max_size: -1
+      timeout: 10
+      body_required: true
+mitm:
+  hostnames:
+    includes:
+      - app.bilibili.com

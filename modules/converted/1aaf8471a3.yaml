@@ -1,0 +1,11 @@
+name: XiaoHongShuBlockVideo
+description: XiaoHongShuBlockVideo
+dns: {}
+body_rewrites:
+  - response_jq:
+      match: '^https?:\/\/[a-z]+\.xiaohongshu\.com\/api/sns/v\d/(homefeed|localfeed)'
+      filter: '.data |= map(select(.type == "normal"))'
+mitm:
+  hostnames:
+    includes:
+      - '*.xiaohongshu.com'

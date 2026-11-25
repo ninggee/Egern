@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "0b5e1cad7a",
+      "url": "https://txscript.pages.dev/tx/tx.sgmodule",
+      "name": "tx.sgmodule"
+    },
+    {
+      "id": "1aaf8471a3",
+      "url": "https://ddgksf2013.top/rewrite/XiaoHongShuBlockVideo.conf",
+      "name": "XiaoHongShuBlockVideo.conf"
+    },
+    {
+      "id": "20a656fadc",
+      "url": "https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/porntube/modules/porntube.sgmodule",
+      "name": "porntube.sgmodule"
+    },
+    {
+      "id": "228495725f",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/%E4%B8%B0%E5%B7%A2%E5%8E%BB%E5%B9%BF%E5%91%8A.beta.sgmodule",
+      "name": "丰巢去广告.beta.sgmodule"
+    },
+    {
+      "id": "28b07c844f",
+      "url": "https://raw.githubusercontent.com/yisaings/surge/refs/heads/main/gaode/gaode.sgmodule",
+      "name": "gaode.sgmodule"
+    },
+    {
+      "id": "2936cda747",
+      "url": "https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/modules/javhd.sgmodule",
+      "name": "javhd.sgmodule"
+    },
+    {
+      "id": "31501cc183",
+      "url": "https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/KuGou.sgmodule",
+      "name": "KuGou.sgmodule"
+    },
+    {
+      "id": "4ca9425950",
+      "url": "https://raw.githubusercontent.com/ninggee/Surge/refs/heads/main/sgmodule/Coolapk_Redirect.sgmodule",
+      "name": "Coolapk_Redirect.sgmodule"
+    },
+    {
+      "id": "59eb658a70",
+      "url": "https://raw.githubusercontent.com/yisaings/surge/refs/heads/main/qqmusic/qqmusic.sgmodule",
+      "name": "qqmusic.sgmodule"
+    },
+    {
+      "id": "64707f82cb",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/%E5%BE%AE%E4%BF%A1%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E8%A7%A3%E9%94%81.beta.sgmodule",
+      "name": "微信外部链接解锁.beta.sgmodule"
+    },
+    {
+      "id": "708dc664ef",
+      "url": "https://raw.githubusercontent.com/Yu9191/Rewrite/main/huangdouduanju/modules/huangdou.sgmodule",
+      "name": "huangdou.sgmodule"
+    },
+    {
+      "id": "78cdef5ced",
+      "url": "https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/Html/Q-Search.conf",
+      "name": "Q-Search.conf"
+    },
+    {
+      "id": "8198564fe4",
+      "url": "https://raw.githubusercontent.com/yisaings/surge/refs/heads/main/didi/didi.sgmodule",
+      "name": "didi.sgmodule"
+    },
+    {
+      "id": "861e8ed752",
+      "url": "https://raw.githubusercontent.com/ninggee/Surge/refs/heads/main/sgmodule/BiliBili%E8%A7%A3%E9%94%81%E9%AB%98%E7%94%BB%E8%B4%A8.sgmodule",
+      "name": "BiliBili解锁高画质.sgmodule"
+    },
+    {
+      "id": "930f140af1",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/Google%E9%87%8D%E5%AE%9A%E5%90%91.beta.sgmodule",
+      "name": "Google重定向.beta.sgmodule"
+    },
+    {
+      "id": "951a0706ca",
+      "url": "https://raw.githubusercontent.com/Yu9191/wloc/refs/heads/main/modules/wloc.sgmodule",
+      "name": "wloc.sgmodule"
+    },
+    {
+      "id": "992647eba9",
+      "url": "https://yfamilys.com/module/wechatad.module",
+      "name": "wechatad.module"
+    },
+    {
+      "id": "a4ad4cb0d8",
+      "url": "https://ddgksf2013.top/module/Redirect2Turrit.sgmodule",
+      "name": "Redirect2Turrit.sgmodule"
+    },
+    {
+      "id": "bf22bdfd72",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/%E8%B5%B7%E7%82%B9%E8%AF%BB%E4%B9%A6%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "name": "起点读书去广告.sgmodule"
+    },
+    {
+      "id": "bfc3e0378f",
+      "url": "https://raw.githubusercontent.com/Maasea/sgmodule/master/WeRead.sgmodule",
+      "name": "WeRead.sgmodule"
+    },
+    {
+      "id": "c72dad807f",
+      "url": "https://raw.githubusercontent.com/yisaings/surge/refs/heads/main/umetrip/umetrip.sgmodule",
+      "name": "umetrip.sgmodule"
+    },
+    {
+      "id": "db1793fc62",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Beta/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%BC%AB%E7%94%BB%E5%8E%BB%E5%B9%BF%E5%91%8A.beta.sgmodule",
+      "name": "哔哩哔哩漫画去广告.beta.sgmodule"
+    },
+    {
+      "id": "e81ae8b092",
+      "url": "https://raw.githubusercontent.com/ios151/Rewrite/main/YuRedirect.sgmodule",
+      "name": "YuRedirect.sgmodule"
+    },
+    {
+      "id": "f33807b1a7",
+      "url": "https://raw.githubusercontent.com/app2smile/rules/master/module/bilibili.sgmodule",
+      "name": "bilibili.sgmodule"
+    },
+    {
+      "id": "fa2cc9be4e",
+      "url": "https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.sgmodule",
+      "name": "ChinaMobile.sgmodule"
+    },
+    {
+      "id": "fcb503ed10",
+      "url": "https://raw.githubusercontent.com/ninggee/Surge/refs/heads/main/sgmodule/WeTalk%E7%AD%BE%E5%88%B0%E6%A8%A1%E5%9D%97.sgmodule",
+      "name": "WeTalk签到模块.sgmodule"
+    }
+  ]
+}

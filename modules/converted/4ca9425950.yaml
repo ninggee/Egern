@@ -1,0 +1,13 @@
+#!category=应用增强
+name: 酷安链接直开
+description: 在酷安(Coolapk)中点击外部链接时，跳过"未知网页安全提示"页面，直接 302 重定向到目标链接。
+author: LinkPass888
+dns: {}
+url_rewrites:
+- match: ^https?://www\.coolapk\.com/link\?(?:.*?&)?url=((?!https?://(?:[^/]*\.)?coolapk\.com)[^&#]+).*$
+  location: $1
+  status_code: 302
+mitm:
+  hostnames:
+    includes:
+      - www.coolapk.com

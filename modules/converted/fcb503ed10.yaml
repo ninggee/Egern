@@ -1,0 +1,20 @@
+#!category=定时任务
+name: WeTalk 签到模块
+description: 获取 WeTalk 签到参数并执行每日定时签到任务。
+author: ninggee
+dns: {}
+scriptings:
+  - http_request:
+      name: WeTalk获取签到参数
+      match: '^https:\/\/api\.wetalkapp\.com\/app\/queryBalanceAndBonus'
+      script_url: 'https://raw.githubusercontent.com/ninggee/Surge/refs/heads/main/js/WeTalk_capture.js'
+      timeout: 60
+  - schedule:
+      name: WeTalk签到
+      cron: 30 8,20 * * *
+      script_url: 'https://raw.githubusercontent.com/ninggee/Surge/refs/heads/main/js/WeTalk_Task.js'
+      timeout: 120
+mitm:
+  hostnames:
+    includes:
+      - api.wetalkapp.com

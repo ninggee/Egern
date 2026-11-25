@@ -1,0 +1,50 @@
+#!category=【yisa】Sgmodule
+name: 滴滴精简
+description: 首页只留叫车服务，我的页去营销卡
+dns: {}
+url_rewrites:
+- match: ^https://adtrack\.xiaojukeji\.com/trackx
+  location: http://reject/
+scriptings:
+  - http_response:
+      name: 滴滴首页核心
+      match: '^https://conf\.diditaxi\.com\.cn/homepage/v1/core'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/didi/didi-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 滴滴首页快
+      match: '^https://conf\.diditaxi\.com\.cn/homepage/v1/other/fast'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/didi/didi-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 滴滴首页慢
+      match: '^https://conf\.diditaxi\.com\.cn/homepage/v1/other/slow'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/didi/didi-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 滴滴我的页
+      match: '^https://common\.diditaxi\.com\.cn/common/v5/usercenter/layout'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/didi/didi-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 滴滴开屏弹窗
+      match: '^https://res\.xiaojukeji\.com/resapi/activity/mget'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/didi/didi-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+mitm:
+  hostnames:
+    includes:
+      - conf.diditaxi.com.cn
+      - common.diditaxi.com.cn
+      - res.xiaojukeji.com
+      - adtrack.xiaojukeji.com

@@ -1,0 +1,23 @@
+name: Yu9191 → ios151 链接重定向
+description: 旧号 Yu9191 已迁移至 ios151，访问 raw / github 旧路径时自动 302 到新号
+author: ios151
+homepage: 'https://github.com/ios151/Rewrite'
+dns: {}
+url_rewrites:
+- match: ^https:\/\/raw\.githubusercontent\.com\/Yu9191\/Yu9191\/(.*)
+  location: https://raw.githubusercontent.com/ios151/ios151/$1
+  status_code: 302
+- match: ^https:\/\/raw\.githubusercontent\.com\/Yu9191\/(.*)
+  location: https://raw.githubusercontent.com/ios151/$1
+  status_code: 302
+- match: ^https:\/\/github\.com\/Yu9191\/Yu9191(\/.*)?$
+  location: https://github.com/ios151/ios151$1
+  status_code: 302
+- match: ^https:\/\/github\.com\/Yu9191(\/.*)?$
+  location: https://github.com/ios151$1
+  status_code: 302
+mitm:
+  hostnames:
+    includes:
+      - raw.githubusercontent.com
+      - github.com

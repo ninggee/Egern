@@ -1,0 +1,78 @@
+#!category=【yisa】Sgmodule
+name: 高德精简
+description: 只留地图与导航，去营销与推荐流
+dns: {}
+rules:
+  - domain:
+      match: optimus-ads.amap.com
+      policy: REJECT
+scriptings:
+  - http_response:
+      name: 高德场景推荐
+      match: '^https://m5\.amap\.com/ws/shield/scene/recommend'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德推荐流
+      match: '^https://m5\.amap\.com/ws/info_bff/contentFeed'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德内容中心
+      match: '^https://m5\.amap\.com/ws/info_bff/ContentCenter'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德探索搜索
+      match: '^https://m5\.amap\.com/ws/c3frontend/af-ai-search/search'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德我的页
+      match: '^https://m5\.amap\.com/ws/shield/dsp/profile/index/nodefaasv3'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德地图图层
+      match: '^https://m5\.amap\.com/ws/faas/amap-navigation/main-page-aiqs'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德推广后台
+      match: '^https://m5-zb\.amap\.com/ws/'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德探索AI流
+      match: '^https://ai\.amap\.com/v1/ai_rec/home_explore'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+  - http_response:
+      name: 高德首页AI流
+      match: '^https://ai\.amap\.com/v1/ai_rec/home_qs'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/gaode/gaode-ad.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+mitm:
+  hostnames:
+    includes:
+      - m5.amap.com
+      - m5-zb.amap.com
+      - ai.amap.com

@@ -1,0 +1,121 @@
+name: 中国移动去广告
+description: 由 ccyykk666 的 Loon 插件移植而来，Surge 可用。含 AES 垫片（模拟 Loon 的 $crypto.aes）与 8 个开关。
+author: ccyykk666
+dns: {}
+compat_arguments:
+  HideTopFamily: 'false'
+  HideTopAge: 'false'
+  HideTopPhone: 'false'
+  HideTopNearby: 'false'
+  HideTopAI: 'false'
+  HideTopEnterprise: 'false'
+  BottomClean: 'true'
+  MineClean: 'true'
+compat_arguments_desc: 'HideTopFamily: HideTopFamily
+
+  HideTopAge: HideTopAge
+
+  HideTopPhone: HideTopPhone
+
+  HideTopNearby: HideTopNearby
+
+  HideTopAI: HideTopAI
+
+  HideTopEnterprise: HideTopEnterprise
+
+  BottomClean: BottomClean
+
+  MineClean: MineClean'
+scriptings:
+  - http_response:
+      name: CM-homepage
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/(?:DN/(?:homePage/getTopAreaList|multipleInterfaces/aggregationData|searchWord/getSearchWordInfo)|DA/baseServiceFunction/getAdverList)(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-navigation
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/DN/init/getNavigation(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-bottomnav
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/DN/bottomNavigationService/getNavigationInfo(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-mypage
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/DN/myPageNew/getMyPageNew(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-h5
+      match: '^https://(?:h\.app\.coc\.10086\.cn/biz-orange/(?:DH/(?:message_query/message/query/list|myCardVoucher/getBannerList)|DA/baseServiceFunction/getAdverList)|app\.10086\.cn/biz-orange/DA/commonBoard/getCommonBoard)(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-recharge
+      match: '^https://touch\.10086\.cn/i/v1/cust/(?:aiMainQry|iopBatchQry)/[^?]+(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-popwindow
+      match: '^https://touch\.10086\.cn/i/v1/pay/popWindowQry/[^?]+(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_response:
+      name: CM-adfilter
+      match: '^https://ad\.mcloud\.139\.com/advertapi/adv-filter/adv-filter/AdInfoFilter/getAdInfos(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile.js'
+      max_size: -1
+      timeout: 60
+      body_required: true
+      env:
+        _compat.$argument: 'HideTopFamily:{{{HideTopFamily}}};HideTopAge:{{{HideTopAge}}};HideTopPhone:{{{HideTopPhone}}};HideTopNearby:{{{HideTopNearby}}};HideTopAI:{{{HideTopAI}}};HideTopEnterprise:{{{HideTopEnterprise}}};BottomClean:{{{BottomClean}}};MineClean:{{{MineClean}}}'
+  - http_request:
+      name: CM-reject
+      match: '^https://client\.app\.coc\.10086\.cn/biz-orange/(?:DN/(?:dropsAdverService/getDropsAdverNew|homepagePopup/getSortInfo|toast/getToastRule)|DH/toast/august/getToast|DA/liveSuspension/getPageCode)(?:\?.*)?$'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile-request.js'
+      timeout: 60
+  # ===== 自定义规则（自动同步会保留此区域内容） =====
+  - http_request:
+      name: CM-splash
+      match: '^https?://res\.app\.coc\.10086\.cn/qwhdcdn_cmcc-cs_cn/prd-mgcenter/'
+      script_url: 'https://raw.githubusercontent.com/muktsoen/SurgeRules/main/ChinaMobile-request.js'
+      timeout: 60
+mitm:
+  hostnames:
+    includes:
+      - client.app.coc.10086.cn
+      - h.app.coc.10086.cn
+      - app.10086.cn
+      - touch.10086.cn
+      - ad.mcloud.139.com
+      - res.app.coc.10086.cn

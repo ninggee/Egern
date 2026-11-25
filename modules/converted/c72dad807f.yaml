@@ -1,0 +1,46 @@
+#!category=【yisa】Sgmodule
+name: 航旅纵横精简
+description: 精简首页、我的页与社区，去推广营销
+dns: {}
+url_rewrites:
+- match: ^https://sns\.umetrip\.com/weex/
+  location: http://reject/
+- match: ^https://activity\.umetrip\.com/
+  location: http://reject/
+- match: ^https://sensors\.umetrip\.com\.cn/
+  location: http://reject/
+- match: ^https://analytics\.umetrip\.com/
+  location: http://reject/
+- match: ^https://bda\.umetrip\.com/
+  location: http://reject/
+- match: ^https://lefox-data-library-cdn\.cdfsunrise.com/
+  location: http://reject/
+- match: ^https://oss\.umetrip\.com/fs/advert/polite/
+  location: http://reject/
+- match: ^https://api\.mixpanel\.com/
+  location: http://reject/
+scriptings:
+  - http_response:
+      name: umetrip-gw
+      match: '^https?://(bkclient\.umetrip\.com\.cn|umerp\.umetrip\.com(\.cn)?|umehome\.umetrip\.com(\.cn)?|home\.umetrip\.com(\.cn)?|opactivity\.umetrip\.com|sns\.umetrip\.com)/gateway/api/umetrip/native'
+      script_url: 'https://raw.githubusercontent.com/yisaings/surge/main/umetrip/umetrip-gw.js'
+      max_size: 1048576
+      timeout: 60
+      body_required: true
+      binary_body: true
+mitm:
+  hostnames:
+    includes:
+      - sns.umetrip.com
+      - activity.umetrip.com
+      - sensors.umetrip.com.cn
+      - analytics.umetrip.com
+      - bda.umetrip.com
+      - lefox-data-library-cdn.cdfsunrise.com
+      - oss.umetrip.com
+      - api.mixpanel.com
+      - bkclient.umetrip.com.cn
+      - umerp.umetrip.com
+      - umehome.umetrip.com
+      - home.umetrip.com
+      - opactivity.umetrip.com

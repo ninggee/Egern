@@ -1,0 +1,49 @@
+#!category=18+
+name: JAVHD解锁VIP
+description: JAVHD视频解锁20260824
+author: Yu9191 Rewrite
+homepage: 'https://github.com/Yu9191/Rewrite'
+dns: {}
+scriptings:
+  - http_response:
+      name: JAVHD播放
+      match: '"^https?:\/\/(www\.|zh\.)?javhd\.com\/.*player_api"'
+      script_url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/dist/javhd.js'
+      max_size: -1
+      timeout: 20
+      body_required: true
+  - http_response:
+      name: JAVHD页面
+      match: '"^https?:\/\/(www\.|zh\.)?javhd\.com\/(zh\/studio\/room\/[\w-]+\/video\/[\w-]+|zh\/sex-categories|zh\/japanese-porn-videos|zh\/sex-videos|zh\/studio\/room|zh\/?$)"'
+      script_url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/dist/javhd.js'
+      max_size: -1
+      timeout: 20
+      body_required: true
+  - http_response:
+      name: JAVHD分类
+      match: '"^https?:\/\/(www\.|zh\.)?javhd\.com\/zh\/japanese-porn-videos\/category\/.+"'
+      script_url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/dist/javhd.js'
+      max_size: -1
+      timeout: 20
+      body_required: true
+  - http_response:
+      name: JAVHD API
+      match: '"^https?:\/\/(www\.|zh\.)?javhd\.com\/api\/.*"'
+      script_url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/dist/javhd.js'
+      max_size: -1
+      timeout: 20
+      body_required: true
+  - http_response:
+      name: JAVHD m3u8
+      match: '"^https?:\/\/.*\.cdnjhd\.com\/.*\.m3u8(\?.*)?$"'
+      script_url: 'https://raw.githubusercontent.com/Yu9191/Rewrite/refs/heads/main/javhd/dist/javhd.js'
+      max_size: -1
+      timeout: 20
+      body_required: true
+mitm:
+  hostnames:
+    includes:
+      - javhd.com
+      - www.javhd.com
+      - zh.javhd.com
+      - '*.cdnjhd.com'
