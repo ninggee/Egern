@@ -82,7 +82,7 @@ jobs:
       - name: Validate downloaded artifacts without fetching upstream
         run: python3 tools/validate_converted_modules.py artifact
 
-      - name: Publish generated files and prune removed sources
+      - name: Publish under source filenames and prune removed sources
         run: python3 tools/publish_converted_modules.py artifact
 
       - name: Commit generated changes
