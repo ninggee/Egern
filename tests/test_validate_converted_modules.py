@@ -48,6 +48,31 @@ rewrites:
         with self.assertRaises(ValueError):
             normalize(text)
 
+    def test_surge_ad_blocking_and_argument_description_are_normalized(self) -> None:
+        result = yaml.safe_load(normalize("""name: test
+compat_arguments:
+  Mode: '0'
+compat_arguments_schema:
+  Mode:
+    description: Mode
+rules:
+  - domain:
+      match: ads.example.com
+      policy: REJECT-NO-DROP
+rewrites:
+  - match: '^https://api.example.com/ads'
+    actions:
+      - respond:
+          status: 200
+          body: '{}'
+compat_arguments_desc: "0 displays the tab; 1 hides it."
+"""))
+        self.assertEqual(result["rules"][0]["domain"]["policy"], "REJECT")
+        self.assertEqual(result["url_rewrites"][0]["location"], "http://reject-dict/")
+        self.assertEqual(result["compat_arguments"], {"Mode": "0"})
+        self.assertEqual(result["compat_arguments_desc"], "0 displays the tab; 1 hides it.")
+        self.assertNotIn("compat_arguments_schema", result)
+
     def test_incompatible_result_is_removed_from_publishable_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             directory = Path(temporary)

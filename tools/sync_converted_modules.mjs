@@ -12,6 +12,7 @@ const maxSourceBytes = 5 * 1024 * 1024;
 const maxConverterBytes = 1024 * 1024;
 const allowedHosts = new Set(['github.com', 'raw.githubusercontent.com', 'txscript.pages.dev', 'yfamilys.com', 'ddgksf2013.top']);
 const sensitiveQuery = /(?:token|access[_-]?token|api[_-]?key|secret|password|passwd|authorization|auth)=/i;
+const argumentDescriptionWarning = '#!arguments-desc 是整段说明文字、没有按参数名分段，未拆分到各参数的说明里；各参数 description 已回退为参数名本身，整段原文请在原模块里查看。';
 
 function assertSource(source, ids, urls) {
   if (!source || typeof source !== 'object') throw new Error('Source entry must be an object');
@@ -105,7 +106,14 @@ function moduleText(text, source, converter) {
   const parsed = converter.isQuantumultX(text)
     ? converter.convertQX(text, source.name)
     : converter.convert(text);
-  if (parsed.warnings.length) throw new Error(`warnings-${parsed.warnings.length}`);
+  const description = parsed.warnings.includes(argumentDescriptionWarning)
+    ? [...text.matchAll(/^[ \t]*#!arguments-desc[ \t]*=[ \t]*([^\r\n]+)$/gim)]
+    : [];
+  const fullDescription = description.length === 1 ? description[0][1].trim().replace(/\\n/g, '\n') : '';
+  const remainingWarnings = fullDescription
+    ? parsed.warnings.filter((warning) => warning !== argumentDescriptionWarning)
+    : parsed.warnings;
+  if (remainingWarnings.length) throw new Error(`warnings-${remainingWarnings.length}`);
   if (!Object.values(parsed.counts).some((count) => count > 0)) throw new Error('no-effective-module-content');
   if (parsed.rewrites.some((rewrite) => rewrite.kind === 'echo' && !rewrite.disabled)) {
     throw new Error('requires-remote-echo-data');
@@ -116,7 +124,8 @@ function moduleText(text, source, converter) {
 
   const meta = parsed.buildArgs[0];
   if (!meta.name) meta.name = source.name.replace(/\.(?:sgmodule|module|conf)$/i, '');
-  const output = converter.buildYaml.apply(null, parsed.buildArgs);
+  let output = converter.buildYaml.apply(null, parsed.buildArgs);
+  if (fullDescription) output = `${output.trimEnd()}\ncompat_arguments_desc: ${JSON.stringify(fullDescription)}\n`;
   if (!output.trim() || sensitiveQuery.test(output) || /https?:\/\/[^\s/@]+:[^\s/@]+@/i.test(output)) {
     throw new Error('empty-or-sensitive-output');
   }

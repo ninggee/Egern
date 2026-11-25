@@ -12,6 +12,7 @@ import yaml
 REJECT_TARGETS = {
     (404, "", ()): "http://reject/",
     (200, "", ()): "http://reject-200/",
+    (200, "{}", ()): "http://reject-dict/",
     (200, "{}", (("Content-Type", "application/json"),)): "http://reject-dict/",
     (200, "[]", (("Content-Type", "application/json"),)): "http://reject-array/",
 }
@@ -22,6 +23,14 @@ def normalize(text: str) -> str:
     if not isinstance(data, dict):
         raise ValueError("Module is not a mapping")
     replacements = {}
+    normalized_policy = False
+    for rule in data.get("rules") or []:
+        for body in rule.values():
+            if isinstance(body, dict) and body.get("policy") == "REJECT-NO-DROP":
+                body["policy"] = "REJECT"
+                normalized_policy = True
+    if normalized_policy:
+        replacements["rules"] = yaml.safe_dump({"rules": data["rules"]}, allow_unicode=True, sort_keys=False)
     if "rewrites" in data:
         rules = []
         for rewrite in data["rewrites"] or []:
@@ -45,12 +54,15 @@ def normalize(text: str) -> str:
             raise ValueError("Mixed response and URL rewrites require an order review")
         replacements["rewrites"] = yaml.safe_dump({"url_rewrites": rules}, allow_unicode=True, sort_keys=False)
     if "compat_arguments_schema" in data:
-        descriptions = []
-        for name, schema in data["compat_arguments_schema"].items():
-            descriptions.append(f"{name}: {schema.get('description') or name}")
-        replacements["compat_arguments_schema"] = yaml.safe_dump(
-            {"compat_arguments_desc": "\n".join(descriptions)}, allow_unicode=True, sort_keys=False
-        )
+        if "compat_arguments_desc" in data:
+            replacements["compat_arguments_schema"] = ""
+        else:
+            descriptions = []
+            for name, schema in data["compat_arguments_schema"].items():
+                descriptions.append(f"{name}: {schema.get('description') or name}")
+            replacements["compat_arguments_schema"] = yaml.safe_dump(
+                {"compat_arguments_desc": "\n".join(descriptions)}, allow_unicode=True, sort_keys=False
+            )
     if not replacements:
         return text
     sections = re.split(r"(?m)(?=^[A-Za-z_][\w-]*:)", text)
