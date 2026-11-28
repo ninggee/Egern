@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Sync AdUltra while changing exactly one script URL; fail closed on drift."""
+"""Sync AdUltra with one script URL replacement and stable, visible JS metadata."""
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import hashlib
 import os
 from pathlib import Path
@@ -10,11 +11,12 @@ import re
 import sys
 import tempfile
 import urllib.error
+import urllib.parse
 import urllib.request
 
 SOURCE_URL = "https://yfamilys.com/module/adultra.sgmodule"
 ORIGINAL_JS_URL = "https://raw.githubusercontent.com/app2smile/rules/master/js/qidian.js"
-REPLACEMENT_JS_URL = "https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js?v=20261128-activityicon"
+REPLACEMENT_JS_URL = "https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js?v=2026.11.28.2"
 TARGET = Path(__file__).resolve().parents[1] / "modules/adultra-qidian-fix.sgmodule"
 MAX_BYTES = 5 * 1024 * 1024
 REQUIRED_SECTIONS = ("Rule", "URL Rewrite", "Body Rewrite", "Map Local", "Script", "MITM")
@@ -54,6 +56,42 @@ def render_module(source: bytes) -> bytes:
     return result
 
 
+def script_metadata(script_text: str | None = None) -> tuple[str, str]:
+    """Read the JS header, never substitute today's sync time for its update time."""
+    if script_text is None:
+        script_text = (TARGET.parents[1] / "scripts/qidian.js").read_text(encoding="utf-8")
+    versions = re.findall(r"(?m)^ \* @version ([^\r\n]+)$", script_text)
+    updates = re.findall(r"(?m)^ \* @updated ([^\r\n]+)$", script_text)
+    if len(versions) != 1 or len(updates) != 1:
+        raise SyncError("Expected one @version and one @updated in the Qidian JS header")
+    version, updated = versions[0], updates[0]
+    if not re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", version):
+        raise SyncError("Invalid Qidian script version")
+    try:
+        datetime.strptime(updated, "%Y-%m-%d %H:%M:%S %z")
+    except ValueError as exc:
+        raise SyncError("Invalid Qidian script update timestamp") from exc
+    if not updated.endswith(" +08:00"):
+        raise SyncError("Qidian update timestamp must explicitly use +08:00")
+    return version, updated
+
+
+def with_script_metadata(module: bytes) -> bytes:
+    """Expose the stable JS version/time in the module's existing description."""
+    version, updated = script_metadata()
+    if urllib.parse.parse_qs(urllib.parse.urlsplit(REPLACEMENT_JS_URL).query) != {"v": [version]}:
+        raise SyncError("Qidian cache version and JS header version disagree")
+    text = module.decode("utf-8")
+    descriptions = list(re.finditer(r"(?m)^#!desc=([^\r\n]*)", text))
+    if len(descriptions) != 1:
+        raise SyncError("Expected exactly one module description for visible version metadata")
+    match = descriptions[0]
+    original = re.sub(r" \| 起点JS v[^\r\n]*$", "", match.group(1))
+    description = f"{original} | 起点JS v{version}，更新于 {updated}"
+    start, end = match.span(1)
+    return (text[:start] + description + text[end:]).encode("utf-8")
+
+
 def fetch_source() -> bytes:
     request = urllib.request.Request(SOURCE_URL, headers={
         "User-Agent": "Surge/5.0 AdUltraSync/1.0",
@@ -71,7 +109,7 @@ def fetch_source() -> bytes:
 
 
 def sync_bytes(source: bytes, target: Path = TARGET) -> bool:
-    result = render_module(source)
+    result = with_script_metadata(render_module(source))
     if target.exists() and target.read_bytes() == result:
         return False
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -100,7 +138,7 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
     print(f"Upstream SHA-256: {hashlib.sha256(source).hexdigest()}")
-    print("Updated module (one URL replacement)." if changed else "No upstream change; no file written.")
+    print("Updated module (one URL replacement + stable script metadata)." if changed else "No upstream change; no file written.")
     return 0
 
 

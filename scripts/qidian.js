@@ -1,3 +1,13 @@
+/**
+ * @name 起点 App 兼容修复（AdUltra）
+ * @version 2026.11.28.2
+ * @updated 2026-11-28 10:53:16 +08:00
+ * @source https://raw.githubusercontent.com/app2smile/rules/master/js/qidian.js
+ * @description 兼容 ActivityPopup/Data 与 ActivityIcon/Type 可选配置。
+ * 更新时间指本修复脚本的修改时间，不是每日上游模块同步时间。
+ */
+console.log('[起点兼容修复] v2026.11.28.2 | 更新时间：2026-11-28 10:53:16 +08:00');
+
 let url = $request.url;
 let method = $request.method;
 if (!$response.body) {

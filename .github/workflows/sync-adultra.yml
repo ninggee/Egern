@@ -51,7 +51,7 @@ jobs:
           git add -- "$module"
           git commit -m 'chore: sync AdUltra upstream'
           git push origin HEAD:main
-          echo 'Updated AdUltra; only the app2smile Qidian dependency URL is replaced.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Updated AdUltra: the Qidian dependency URL and display-only JS version metadata; all other upstream rules are preserved.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Explain a failed sync
         if: failure()

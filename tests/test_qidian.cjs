@@ -104,6 +104,15 @@ test('unrelated splash field diagnostics are retained', () => {
     assert.ok(result.notifications.some(args => args[2] === 'List字段空'));
     assert.ok(result.notifications.some(args => args[2] === 'EnableGDT字段为空'));
 });
+test('header metadata matches the actual script execution log', () => {
+    const version = code.match(/^ \* @version (.+)$/m)?.[1];
+    const updated = code.match(/^ \* @updated (.+)$/m)?.[1];
+    assert.match(version, /^\d{4}\.\d{2}\.\d{2}\.\d+$/);
+    assert.match(updated, /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \+08:00$/);
+    const result = run(base());
+    assert.equal(result.logs[0][0], `[起点兼容修复] v${version} | 更新时间：${updated}`);
+});
+
 for (const [endpoint, input, field, expected] of [
     ['v4/client/getsplashscreen', {List: [{ad: 1}], EnableGDT: 1, Keep: 42}, 'List', null],
     ['v2/deeplink/geturl', {ActionUrl: 'QDReader://Bookstore', Keep: 42}, 'ActionUrl', ''],

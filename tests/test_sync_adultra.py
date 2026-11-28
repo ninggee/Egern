@@ -12,7 +12,7 @@ spec.loader.exec_module(sync)
 
 def fixture(newline='\n'):
     lines = [
-        '#!name=APP启动页去广告ultra', '# 保留原作者与中文说明',
+        '#!name=APP启动页去广告ultra', '#!desc=保留上游说明', '# 保留原作者与中文说明',
         '[Rule]', 'DOMAIN,ads.example.com,REJECT',
         '[URL Rewrite]', '^https://ads.example.com - reject',
         '[Body Rewrite]', 'http-response ^https://example.com response-body foo response-body bar',
@@ -129,7 +129,59 @@ class SyncTests(unittest.TestCase):
             target.write_bytes(b'Previous version')
             source = fixture().replace(b'ads.example.com', b'new-ad.example.com')
             self.assertTrue(sync.sync_bytes(source, target))
-            self.assertEqual(target.read_bytes(), sync.render_module(source))
+            self.assertEqual(target.read_bytes(), sync.with_script_metadata(sync.render_module(source)))
+
+
+class MetadataTests(unittest.TestCase):
+    def test_module_displays_script_version_and_update_time(self):
+        rendered = sync.render_module(fixture())
+        version, updated = sync.script_metadata()
+        stamped = sync.with_script_metadata(rendered)
+        suffix = f' | 起点JS v{version}，更新于 {updated}'.encode()
+        self.assertEqual(stamped, rendered.replace('#!desc=保留上游说明'.encode(), '#!desc=保留上游说明'.encode() + suffix, 1))
+
+    def test_metadata_reapplication_is_idempotent(self):
+        stamped = sync.with_script_metadata(sync.render_module(fixture()))
+        self.assertEqual(sync.with_script_metadata(stamped), stamped)
+
+    def test_metadata_preserves_crlf(self):
+        rendered = sync.render_module(fixture('\r\n'))
+        stamped = sync.with_script_metadata(rendered)
+        self.assertEqual(stamped.count(b'\r\n'), rendered.count(b'\r\n'))
+
+    def test_header_validation(self):
+        valid = ' * @version 2026.11.28.2\n * @updated 2026-11-28 10:53:16 +08:00\n'
+        self.assertEqual(sync.script_metadata(valid), ('2026.11.28.2', '2026-11-28 10:53:16 +08:00'))
+        for source in ('', valid + valid, valid.replace('2026.11.28.2', 'unknown'), valid.replace('11-28', '99-99'), valid.replace('+08:00', '+00:00')):
+            with self.subTest(source=source), self.assertRaises(sync.SyncError):
+                sync.script_metadata(source)
+
+    def test_missing_or_duplicate_description_rejected(self):
+        rendered = sync.render_module(fixture())
+        for source in (rendered.replace(b'#!desc=', b'# desc='), rendered + b'\n#!desc=duplicate'):
+            with self.subTest(source=source[:30]), self.assertRaises(sync.SyncError):
+                sync.with_script_metadata(source)
+
+    def test_cache_version_mismatch_rejected(self):
+        with mock.patch.object(sync, 'REPLACEMENT_JS_URL', 'https://example.com/qidian.js?v=wrong'), self.assertRaises(sync.SyncError):
+            sync.with_script_metadata(sync.render_module(fixture()))
+
+    def test_published_description_matches_script(self):
+        published = sync.TARGET.read_bytes()
+        self.assertEqual(sync.with_script_metadata(published), published)
+        version, updated = sync.script_metadata()
+        self.assertIn(f'起点JS v{version}，更新于 {updated}'.encode(), published)
+
+    def test_metadata_only_change_is_detected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / 'module.sgmodule'
+            self.assertTrue(sync.sync_bytes(fixture(), target))
+            source = fixture()
+            new_version, new_time = '2099.01.01.1', '2099-01-01 08:00:00 +08:00'
+            with mock.patch.object(sync, 'script_metadata', return_value=(new_version, new_time)), mock.patch.object(sync, 'REPLACEMENT_JS_URL', 'https://example.com/qidian.js?v=' + new_version):
+                self.assertTrue(sync.sync_bytes(source, target))
+                self.assertIn(new_time.encode(), target.read_bytes())
+                self.assertFalse(sync.sync_bytes(source, target))
 
 
 if __name__ == '__main__':
