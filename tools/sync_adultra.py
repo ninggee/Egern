@@ -14,7 +14,7 @@ import urllib.request
 
 SOURCE_URL = "https://yfamilys.com/module/adultra.sgmodule"
 ORIGINAL_JS_URL = "https://raw.githubusercontent.com/app2smile/rules/master/js/qidian.js"
-REPLACEMENT_JS_URL = "https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js"
+REPLACEMENT_JS_URL = "https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js?v=20261128-activityicon"
 TARGET = Path(__file__).resolve().parents[1] / "modules/adultra-qidian-fix.sgmodule"
 MAX_BYTES = 5 * 1024 * 1024
 REQUIRED_SECTIONS = ("Rule", "URL Rewrite", "Body Rewrite", "Map Local", "Script", "MITM")

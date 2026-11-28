@@ -97,8 +97,7 @@ if (!body.Data) {
         }
         // QDReader://Bookshelf 书架右下角悬浮活动
         if (body.Data.ActivityIcon?.Type !== 0) {
-            console.log(`body:${$response.body}`);
-            $notification.post(noticeTitle, "起点-getconf", "ActivityIcon/Type字段错误");
+            console.log('ActivityIcon未下发或Type暂不兼容，跳过悬浮活动处理');
         } else {
             // 无活动icon的情况下为{"EndTime":0,"StartTime":0,"Type":0}
             if (body.Data.ActivityIcon.EndTime === 0) {

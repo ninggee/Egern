@@ -37,6 +37,15 @@ class SyncTests(unittest.TestCase):
         self.assertIn(b'ddgksf2013/Scripts/refs/heads/master/qidian.js', result)
         self.assertEqual(result.replace(sync.REPLACEMENT_JS_URL.encode(), sync.ORIGINAL_JS_URL.encode(), 1), original)
 
+    def test_published_module_stays_on_current_dependency(self):
+        published = sync.TARGET.read_bytes()
+        replacement = sync.REPLACEMENT_JS_URL.encode()
+        original = sync.ORIGINAL_JS_URL.encode()
+        self.assertEqual(published.count(replacement), 1)
+        self.assertNotIn(original, published)
+        restored = published.replace(replacement, original, 1)
+        self.assertEqual(sync.render_module(restored), published)
+
     def test_crlf_preserved(self):
         original = fixture('\r\n')
         result = sync.render_module(original)

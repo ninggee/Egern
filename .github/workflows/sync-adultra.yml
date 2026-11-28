@@ -30,6 +30,9 @@ jobs:
       - name: Test the single-dependency replacement and failure protections
         run: python3 -m unittest discover -s tests -v
 
+      - name: Test Qidian optional fields and existing ad cleanup
+        run: node --test tests/test_qidian.cjs
+
       - name: Fetch upstream and reapply the Qidian URL replacement
         run: python3 tools/sync_adultra.py
 

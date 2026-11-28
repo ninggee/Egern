@@ -18,13 +18,18 @@ https://egernapp.com/docs/faq#how-to-add-a-module
 - 上游模块： https://yfamilys.com/module/adultra.sgmodule
 - 上游署名和模块内容原样保留，只有一处 `script-path` 更改：
   - 原：`https://raw.githubusercontent.com/app2smile/rules/master/js/qidian.js`
-  - 新：`https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js`
+  - 新：`https://raw.githubusercontent.com/ninggee/Egern/main/scripts/qidian.js?v=20261128-activityicon`
 - 另一条同名 `qidian`（ddgksf2013/Scripts）及其他所有脚本地址、匹配规则、MITM 域名均未改动。
-- `scripts/qidian.js` 基于 app2smile 原脚本；仅把 ActivityPopup/Data 为空时的整包日志和错误通知，替换为一条跳过日志；有活动配置时仍沿用原来的清理逻辑，其他通知保留。
+- `scripts/qidian.js` 基于 app2smile 原脚本；对两处可选配置作安全跳过处理：
+  - `ActivityPopup/Data` 为空：不再弹错；有活动配置时仍清除活动弹窗。
+  - `ActivityIcon` 缺失，或 `Type` 不是数字 `0`：仅记录兼容日志，不弹错，也不猜测未知结构。数字 `Type: 0` 的活动图标仍沿用原有清理逻辑。
+- 2026-11-28 的 `ActivityIcon/Type字段错误` 与之前的 ActivityPopup 通知不是同一条。同步没有覆盖旧修复，这次补上了另一处兼容处理。仅凭通知不能确定缺字段还是返回了其他 Type；没有实际响应时不宣称适配了未知类型的广告。
+- 依赖 URL 增加 `v=20261128-activityicon` 版本标记，便于刷新模块时区别旧脚本缓存；每日同步使用相同新 URL。模块订阅地址保持不变。
+- 其他处理和诊断通知保留。
 
 ## 验证和限制
 
-修复 JS 通过 37 项离线模拟断言；模块与上游快照比较仅一行脚本地址不同。未在真实 Egern/起点 App 中验证。
+2026-11-28 修复 JS 通过 27 项 Node.js 模拟回归测试，同步通过 19 项 Python 安全与依赖一致性测试；这些测试会在每日同步前执行。模块与上游仅一处脚本地址不同。未在真实 Egern/起点 App 中验证。
 
 这修复的是缺少可选配置时的错误提醒，不是对未知新版接口的全面适配。原模块及各依赖脚本的署名、权利和适用条款仍归各原作者。
 
@@ -44,6 +49,7 @@ https://egernapp.com/docs/faq#how-to-add-a-module
 同步脚本仅使用 Python 标准库；可离线验证：
 
 ```sh
+node --test tests/test_qidian.cjs
 python3 -m unittest discover -s tests -v
 python3 tools/sync_adultra.py --source-file /path/to/original-adultra.sgmodule
 ```
